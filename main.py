@@ -38,7 +38,7 @@ async def process_text(data: Sentence):
 
     scenes = [s.strip() for s in text.split(".") if s.strip()]
 
-    # 5 Scenes max limit (AMD Laptop!)
+    # 5 Scenes max limit (Change according to the hardware might!)
     scenes = scenes[:5]
 
     storyboard = []
