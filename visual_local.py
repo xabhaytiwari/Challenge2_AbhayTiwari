@@ -8,8 +8,8 @@ pipe = DiffusionPipeline.from_pretrained(
     use_safetensors=True,
     variant="fp16"
 )
-
-pipe.to("cuda")
+device = "cuda" if torch.cuda.is_available() else "cpu"
+pipe.to(device)
 
 
 def get_image(prompt, output_path):
