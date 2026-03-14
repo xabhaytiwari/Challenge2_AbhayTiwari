@@ -4,9 +4,9 @@ import torch
 # Load model once (important for speed)
 pipe = DiffusionPipeline.from_pretrained(
     "stabilityai/stable-diffusion-xl-base-1.0",
-    torch_dtype=torch.float16,
-    use_safetensors=True,
-    variant="fp16"
+    torch_dtype=torch.float32,
+    #use_safetensors=True,
+    #variant="fp16"
 )
 device = "cuda" if torch.cuda.is_available() else "cpu"
 pipe.to(device)
