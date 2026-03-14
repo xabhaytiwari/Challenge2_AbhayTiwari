@@ -19,7 +19,7 @@ To run this project, you will need to have Conda (Miniconda or Anaconda) install
 - **Create the Conda environment using the provided `environment.yml` file**:
 >`conda env create -f environment.yml`
 - **Activate the environment:**
->`conda activate tthe_pitch_visualiser`
+>`conda activate the_pitch_visualiser`
 - **Prepare Static Directory:**
 >`mkdir static`
 
