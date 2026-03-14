@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>The Pitch Visualizer</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#050505;
+    color:#00ff9c;
+    font-family:"JetBrains Mono", monospace;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.container{
+    width:750px;
+}
+
+.title{
+    font-size:26px;
+    margin-bottom:25px;
+    text-shadow:0 0 12px #00ff9c;
+}
+
+.prompt{
+    margin-bottom:6px;
+    font-size:14px;
+}
+
+textarea{
+    width:100%;
+    height:110px;
+    padding:10px;
+    margin-bottom:14px;
+    background:#0e0e0e;
+    border:1px solid #00ff9c44;
+    color:#00ff9c;
+    font-family:inherit;
+    outline:none;
+    resize:none;
+}
+
+textarea:focus{
+    border:1px solid #00ff9c;
+}
+
+button{
+    padding:12px 18px;
+    background:#00ff9c;
+    border:none;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#00ffaa;
+}
+
+.log{
+    margin-top:18px;
+    font-size:14px;
+    color:#7affc7;
+}
+
+.storyboard{
+    margin-top:30px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:20px;
+}
+
+.panel{
+    background:#0e0e0e;
+    border:1px solid #00ff9c33;
+    padding:10px;
+}
+
+.panel img{
+    width:100%;
+}
+
+.caption{
+    margin-top:8px;
+    font-size:13px;
+    color:#7affc7;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">
+> ai.render_storyboard()
+</div>
+
+<div class="prompt">abhay@visualizer:~$ narrative_input</div>
+<textarea id="storyInput" placeholder="write your perfect (dramatic) pitch, a programmer debugs reality..."></textarea>
+
+<button onclick="generateStoryboard()">run_visualizer()</button>
+
+<div class="log" id="log">
+system idle...
+</div>
+
+<div class="storyboard" id="storyboard"></div>
+
+</div>
+
+<script>
+
+async function generateStoryboard(){
+
+    const text = document.getElementById("storyInput").value
+    const log = document.getElementById("log")
+    const board = document.getElementById("storyboard")
+
+    if(!text){
+        log.innerText="ERROR: narrative missing"
+        return
+    }
+
+    log.innerText="analyzing narrative structure..."
+
+    try{
+
+        const response = await fetch("/process",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                sentence:text
+            })
+        })
+
+        const data = await response.json()
+
+        log.innerText="generating storyboard frames..."
+
+        board.innerHTML=""
+
+        data.storyboard.forEach(scene => {
+
+            const panel = document.createElement("div")
+            panel.className="panel"
+
+            panel.innerHTML = `
+                <img src="${scene.image}">
+                <div class="caption">${scene.scene || scene.text}</div>
+            `
+
+            board.appendChild(panel)
+
+        })
+
+        log.innerText="SUCCESS: storyboard generated"
+
+    }
+
+    catch(err){
+
+        log.innerText="CRITICAL FAILURE: backend not responding"
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
